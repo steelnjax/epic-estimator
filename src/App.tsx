@@ -5,7 +5,7 @@ import { MainLayout } from './components/layout/MainLayout';
 function App() {
   return (
     <AppProvider>
-      <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #DDD6FE 100%)' }}>
+      <div className="min-h-screen bg-planner-gray-bg">
         <Header />
         <MainLayout />
       </div>

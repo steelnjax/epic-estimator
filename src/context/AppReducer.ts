@@ -2,6 +2,7 @@ import { AppState, Action, Feature } from '../types';
 import { SIZE_TO_POINTS } from '../constants';
 import { generateSprints } from '../utils/dateUtils';
 import { calculateCompletionSprint } from '../utils/calculations';
+import { inferPriorityFromPosition } from '../utils/sorting';
 
 /**
  * Main reducer for application state management
@@ -10,9 +11,15 @@ export function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     // Epic actions
     case 'ADD_EPIC': {
+      const maxSortOrder = state.epics.length > 0
+        ? Math.max(...state.epics.map(e => e.sortOrder))
+        : -1;
+
       const newEpic = {
         id: crypto.randomUUID(),
         name: action.payload.name,
+        priority: action.payload.priority || 'Medium',
+        sortOrder: maxSortOrder + 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
@@ -33,6 +40,41 @@ export function appReducer(state: AppState, action: Action): AppState {
       };
     }
 
+    case 'UPDATE_EPIC_PRIORITY': {
+      return {
+        ...state,
+        epics: state.epics.map(epic =>
+          epic.id === action.payload.id
+            ? { ...epic, priority: action.payload.priority, updatedAt: Date.now() }
+            : epic
+        ),
+      };
+    }
+
+    case 'REORDER_EPICS': {
+      const { epicIds } = action.payload;
+
+      // Update sortOrder and infer new priorities based on position
+      const updatedEpics = state.epics.map(epic => {
+        const newIndex = epicIds.indexOf(epic.id);
+        if (newIndex === -1) return epic;
+
+        const newPriority = inferPriorityFromPosition(newIndex, epicIds.length);
+
+        return {
+          ...epic,
+          sortOrder: newIndex,
+          priority: newPriority,
+          updatedAt: Date.now(),
+        };
+      });
+
+      return {
+        ...state,
+        epics: updatedEpics,
+      };
+    }
+
     case 'DELETE_EPIC': {
       // Also delete all features belonging to this epic
       const featureIds = state.features
@@ -50,6 +92,12 @@ export function appReducer(state: AppState, action: Action): AppState {
 
     // Feature actions
     case 'ADD_FEATURE': {
+      // Get max sortOrder for features in this epic
+      const epicFeatures = state.features.filter(f => f.epicId === action.payload.epicId);
+      const maxSortOrder = epicFeatures.length > 0
+        ? Math.max(...epicFeatures.map(f => f.sortOrder))
+        : -1;
+
       const newFeature: Feature = {
         id: crypto.randomUUID(),
         epicId: action.payload.epicId,
@@ -57,6 +105,7 @@ export function appReducer(state: AppState, action: Action): AppState {
         size: action.payload.size,
         points: SIZE_TO_POINTS[action.payload.size],
         priority: action.payload.priority,
+        sortOrder: maxSortOrder + 1,
         status: 'Not Started',
         estimatedCompletionSprint: null,
         actualCompletionSprint: null,
@@ -104,8 +153,28 @@ export function appReducer(state: AppState, action: Action): AppState {
     }
 
     case 'REORDER_FEATURES': {
-      // This is a simplified reorder - in a real app, you might want to add a sortOrder field
-      return state;
+      const { epicId, featureIds } = action.payload;
+
+      // Update sortOrder and infer new priorities based on position for features in this epic
+      const updatedFeatures = state.features.map(feature => {
+        if (feature.epicId !== epicId) return feature;
+
+        const newIndex = featureIds.indexOf(feature.id);
+        if (newIndex === -1) return feature;
+
+        const newPriority = inferPriorityFromPosition(newIndex, featureIds.length);
+
+        return {
+          ...feature,
+          sortOrder: newIndex,
+          priority: newPriority,
+        };
+      });
+
+      return {
+        ...state,
+        features: updatedFeatures,
+      };
     }
 
     // Allocation actions

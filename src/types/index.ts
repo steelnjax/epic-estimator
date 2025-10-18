@@ -7,6 +7,8 @@ export type FeatureStatus = 'Not Started' | 'In Progress' | 'Blocked' | 'Complet
 export interface Epic {
   id: string;
   name: string;
+  priority: Priority;
+  sortOrder: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -24,6 +26,7 @@ export interface Feature {
   size: TShirtSize;
   points: number; // Derived from size, but stored for consistency
   priority: Priority;
+  sortOrder: number;
   status: FeatureStatus;
 
   // Tracking fields
@@ -94,9 +97,11 @@ export interface ComputedEpicData {
 // Reducer actions
 export type Action =
   // Epic actions
-  | { type: 'ADD_EPIC'; payload: { name: string } }
+  | { type: 'ADD_EPIC'; payload: { name: string; priority?: Priority } }
   | { type: 'UPDATE_EPIC'; payload: { id: string; name: string } }
+  | { type: 'UPDATE_EPIC_PRIORITY'; payload: { id: string; priority: Priority } }
   | { type: 'DELETE_EPIC'; payload: { id: string } }
+  | { type: 'REORDER_EPICS'; payload: { epicIds: string[] } }
 
   // Feature actions
   | { type: 'ADD_FEATURE'; payload: { epicId: string; name: string; size: TShirtSize; priority: Priority } }

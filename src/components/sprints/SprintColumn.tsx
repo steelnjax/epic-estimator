@@ -16,35 +16,35 @@ export function SprintColumn({ sprint }: SprintColumnProps) {
 
   const utilizationColor =
     sprintData.utilizationPercent > 100
-      ? 'bg-red-500'
+      ? 'bg-status-red'
       : sprintData.utilizationPercent > 90
-      ? 'bg-orange-500'
-      : 'bg-green-500';
+      ? 'bg-status-orange'
+      : 'bg-status-green';
 
   return (
-    <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="p-3 bg-white rounded border border-planner-gray-border shadow-sm">
       {/* Sprint Header */}
       <div className="mb-2">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-gray-900">Sprint {sprint.number}</h3>
-          <span className="text-xs text-gray-600">
+          <h3 className="font-semibold text-gray-800">Sprint {sprint.number}</h3>
+          <span className="text-xs text-planner-gray-text">
             {Math.round(sprintData.utilizationPercent)}%
           </span>
         </div>
-        <div className="text-xs text-gray-600 mt-1">
+        <div className="text-xs text-planner-gray-text-light mt-1">
           {formatSprintDateRange(sprint.startDate, sprint.endDate)}
         </div>
       </div>
 
       {/* Capacity Bar */}
       <div className="mb-3">
-        <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+        <div className="flex items-center justify-between text-xs text-planner-gray-text mb-1">
           <span>Capacity</span>
           <span>
             {sprintData.totalAllocated} / {sprint.velocity} pts
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-planner-gray-light rounded-full h-2">
           <div
             className={`h-2 rounded-full transition-all ${utilizationColor}`}
             style={{
@@ -53,17 +53,17 @@ export function SprintColumn({ sprint }: SprintColumnProps) {
           />
         </div>
         {sprintData.isOverallocated && (
-          <p className="text-xs text-red-600 mt-1">Over capacity!</p>
+          <p className="text-xs text-status-red mt-1 font-medium">Over capacity!</p>
         )}
       </div>
 
       {/* Completing Features */}
       {sprintData.completingFeatures.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-gray-200">
-          <p className="text-xs text-gray-600 mb-2">Completing:</p>
+        <div className="mt-3 pt-3 border-t border-planner-gray-border">
+          <p className="text-xs text-planner-gray-text mb-2 font-medium">Completing:</p>
           <div className="space-y-1">
             {sprintData.completingFeatures.map(feature => (
-              <div key={feature.id} className="text-xs text-gray-700 truncate">
+              <div key={feature.id} className="text-xs text-planner-gray-text truncate">
                 • {feature.name}
               </div>
             ))}

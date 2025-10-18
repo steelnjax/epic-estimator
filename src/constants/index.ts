@@ -16,22 +16,22 @@ export const SPRINT_START_DAY = 2; // Tuesday (0 = Sunday, 1 = Monday, 2 = Tuesd
 // localStorage key
 export const STORAGE_KEY = 'epic-estimator-state';
 
-// Color scheme constants
+// Color scheme constants - Microsoft Planner style
 export const PRIORITY_COLORS = {
-  High: 'text-red-600 bg-red-50',
-  Medium: 'text-yellow-600 bg-yellow-50',
-  Low: 'text-green-600 bg-green-50',
+  High: 'text-status-red bg-status-red/10',
+  Medium: 'text-status-orange bg-status-orange/10',
+  Low: 'text-status-green bg-status-green/10',
 };
 
 export const STATUS_COLORS = {
-  'Not Started': 'text-gray-600 bg-gray-50',
-  'In Progress': 'text-blue-600 bg-blue-50',
-  Blocked: 'text-red-600 bg-red-50',
-  Complete: 'text-green-600 bg-green-50',
+  'Not Started': 'text-planner-gray-text bg-planner-gray-light',
+  'In Progress': 'text-planner-blue bg-planner-blue/10',
+  Blocked: 'text-status-red bg-status-red/10',
+  Complete: 'text-status-green bg-status-green/10',
 };
 
 export const SIZE_COLORS = {
-  S: 'text-blue-700 bg-blue-100',
-  M: 'text-teal-700 bg-teal-100',
-  L: 'text-indigo-700 bg-indigo-100',
+  S: 'text-status-green bg-status-green/10',
+  M: 'text-status-orange bg-status-orange/10',
+  L: 'text-planner-blue bg-planner-blue/10',
 };

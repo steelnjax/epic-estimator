@@ -7,21 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Microsoft Planner color palette
+        planner: {
+          blue: '#0078d4',
+          'blue-dark': '#106ebe',
+          'blue-light': '#2b88d8',
+          'blue-hover': '#005a9e',
+          'gray-bg': '#faf9f8',
+          'gray-light': '#f3f2f1',
+          'gray-border': '#edebe9',
+          'gray-text': '#605e5c',
+          'gray-text-light': '#8a8886',
+        },
         primary: {
-          blue: '#3B82F6',
-          teal: '#14B8A6',
-          dark: '#1E40AF',
+          blue: '#0078d4',
+          teal: '#00b7c3',
+          dark: '#005a9e',
         },
         status: {
-          green: '#10B981',
-          orange: '#F59E0B',
-          red: '#EF4444',
-          gray: '#6B7280',
+          green: '#107c10',
+          orange: '#ff8c00',
+          red: '#d13438',
+          gray: '#8a8886',
         },
         size: {
-          small: '#BFDBFE',
-          medium: '#5EEAD4',
-          large: '#3B82F6',
+          small: '#c8e6c9',
+          medium: '#ffecb3',
+          large: '#bbdefb',
         },
       },
     },

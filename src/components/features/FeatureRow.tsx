@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Feature } from '../../types';
+import { Feature, Priority } from '../../types';
 import { useAppContext } from '../../context/AppContext';
 import { SizeBadge } from './SizeBadge';
 import { StatusBadge } from './StatusBadge';
@@ -18,6 +18,8 @@ export function FeatureRow({ feature }: FeatureRowProps) {
   const [showStatusForm, setShowStatusForm] = useState(false);
   const [showCompletionForm, setShowCompletionForm] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameValue, setNameValue] = useState(feature.name);
 
   const handleDelete = () => {
     if (confirm(`Delete feature "${feature.name}"?`)) {
@@ -25,27 +27,82 @@ export function FeatureRow({ feature }: FeatureRowProps) {
     }
   };
 
+  const handleEditName = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingName(true);
+    setNameValue(feature.name);
+  };
+
+  const handleSaveName = () => {
+    const trimmed = nameValue.trim();
+    if (trimmed && trimmed !== feature.name) {
+      dispatch({ type: 'UPDATE_FEATURE', payload: { id: feature.id, updates: { name: trimmed } } });
+    } else {
+      setNameValue(feature.name);
+    }
+    setIsEditingName(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSaveName();
+    } else if (e.key === 'Escape') {
+      setNameValue(feature.name);
+      setIsEditingName(false);
+    }
+  };
+
   return (
     <>
-      <div className="p-4 bg-white rounded-xl border-2 border-gray-200 hover:border-indigo-300 transition-all shadow-sm hover:shadow-md">
+      <div className="p-4 bg-white rounded border-l-4 border-l-planner-blue-light hover:shadow-md transition-all" style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <h4 className="font-semibold text-gray-900 truncate">{feature.name}</h4>
+              {isEditingName ? (
+                <input
+                  type="text"
+                  value={nameValue}
+                  onChange={e => setNameValue(e.target.value)}
+                  onBlur={handleSaveName}
+                  onKeyDown={handleKeyDown}
+                  className="font-semibold text-gray-800 px-2 py-1 border-2 border-planner-blue rounded focus:outline-none focus:border-planner-blue-dark flex-1"
+                  autoFocus
+                />
+              ) : (
+                <h4
+                  className="font-semibold text-gray-800 truncate cursor-text hover:text-planner-blue transition-colors"
+                  onClick={handleEditName}
+                  title="Click to edit"
+                >
+                  {feature.name}
+                </h4>
+              )}
               <SizeBadge size={feature.size} points={feature.points} />
             </div>
-            <div className="flex items-center gap-3 text-xs text-gray-600">
+            <div className="flex items-center gap-3 text-xs text-planner-gray-text">
               <StatusBadge status={feature.status} />
-              <span className="px-2 py-0.5 bg-gray-100 rounded border border-gray-200 font-medium">
-                {feature.priority}
-              </span>
+              <select
+                value={feature.priority}
+                onChange={e => {
+                  dispatch({
+                    type: 'UPDATE_FEATURE',
+                    payload: { id: feature.id, updates: { priority: e.target.value as Priority } }
+                  });
+                }}
+                className="text-xs px-2 py-1 border border-planner-gray-border rounded bg-white text-planner-gray-text hover:border-planner-blue focus:outline-none focus:border-planner-blue"
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
               {featureData && (
                 <>
                   <span className="font-medium">
-                    Allocated: <span className={featureData.totalAllocated === feature.points ? 'text-green-600' : 'text-gray-900'}>{featureData.totalAllocated}/{feature.points}</span>
+                    Allocated: <span className={featureData.totalAllocated === feature.points ? 'text-status-green' : 'text-gray-800'}>{featureData.totalAllocated}/{feature.points}</span>
                   </span>
                   {featureData.completionSprint && (
-                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded font-semibold">
+                    <span className="px-2 py-0.5 bg-planner-blue/10 text-planner-blue rounded font-semibold">
                       Est: Sprint {featureData.completionSprint}
                     </span>
                   )}
@@ -59,7 +116,7 @@ export function FeatureRow({ feature }: FeatureRowProps) {
               <>
                 <button
                   onClick={() => setShowStatusForm(true)}
-                  className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                  className="p-1.5 text-planner-blue hover:bg-planner-blue/10 rounded transition-colors"
                   title="Update status"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +125,7 @@ export function FeatureRow({ feature }: FeatureRowProps) {
                 </button>
                 <button
                   onClick={() => setShowCompletionForm(true)}
-                  className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  className="p-1.5 text-status-green hover:bg-status-green/10 rounded transition-colors"
                   title="Mark as complete"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +136,7 @@ export function FeatureRow({ feature }: FeatureRowProps) {
             )}
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className={`p-1.5 rounded-lg transition-colors ${showHistory ? 'bg-purple-100 text-purple-600' : 'text-purple-600 hover:bg-purple-50'}`}
+              className={`p-1.5 rounded transition-colors ${showHistory ? 'bg-primary-teal/10 text-primary-teal' : 'text-primary-teal hover:bg-primary-teal/10'}`}
               title="Show history"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +145,7 @@ export function FeatureRow({ feature }: FeatureRowProps) {
             </button>
             <button
               onClick={handleDelete}
-              className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-1.5 text-planner-gray-text-light hover:text-status-red hover:bg-status-red/10 rounded transition-colors"
               title="Delete feature"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,14 +157,14 @@ export function FeatureRow({ feature }: FeatureRowProps) {
 
         {/* Variance Display (if completed) */}
         {feature.status === 'Complete' && (
-          <div className="mt-3 pt-3 border-t border-gray-200">
+          <div className="mt-3 pt-3 border-t border-planner-gray-border">
             <VarianceDisplay feature={feature} compact />
           </div>
         )}
 
         {/* Expandable History Section */}
         {showHistory && (
-          <div className="mt-3 pt-3 border-t border-gray-200">
+          <div className="mt-3 pt-3 border-t border-planner-gray-border">
             <StatusHistoryTimeline feature={feature} />
           </div>
         )}

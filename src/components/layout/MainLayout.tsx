@@ -15,20 +15,14 @@ export function MainLayout() {
     <div className="flex-1 flex flex-col">
       {/* View Toggle */}
       <div className="px-6 pt-6 pb-4">
-        <div style={{ background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(16px)', borderRadius: '1rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', border: '1px solid rgba(229, 231, 235, 0.5)', padding: '0.375rem', display: 'inline-flex', gap: '0.25rem' }}>
+        <div className="bg-white shadow-sm rounded-lg p-1 inline-flex gap-1 border border-planner-gray-border">
           <button
             onClick={() => setViewMode('overview')}
-            className="px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200"
-            style={viewMode === 'overview' ? {
-              background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
-              color: 'white',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              transform: 'scale(1.05)'
-            } : {
-              color: '#374151'
-            }}
-            onMouseEnter={(e) => { if (viewMode !== 'overview') e.currentTarget.style.background = '#F3F4F6'; }}
-            onMouseLeave={(e) => { if (viewMode !== 'overview') e.currentTarget.style.background = 'transparent'; }}
+            className={`px-6 py-2.5 text-sm font-semibold rounded transition-all ${
+              viewMode === 'overview'
+                ? 'bg-planner-blue text-white shadow-sm'
+                : 'text-planner-gray-text hover:bg-planner-gray-light'
+            }`}
           >
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,17 +33,11 @@ export function MainLayout() {
           </button>
           <button
             onClick={() => setViewMode('allocation')}
-            className="px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200"
-            style={viewMode === 'allocation' ? {
-              background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
-              color: 'white',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              transform: 'scale(1.05)'
-            } : {
-              color: '#374151'
-            }}
-            onMouseEnter={(e) => { if (viewMode !== 'allocation') e.currentTarget.style.background = '#F3F4F6'; }}
-            onMouseLeave={(e) => { if (viewMode !== 'allocation') e.currentTarget.style.background = 'transparent'; }}
+            className={`px-6 py-2.5 text-sm font-semibold rounded transition-all ${
+              viewMode === 'allocation'
+                ? 'bg-planner-blue text-white shadow-sm'
+                : 'text-planner-gray-text hover:bg-planner-gray-light'
+            }`}
           >
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,17 +48,11 @@ export function MainLayout() {
           </button>
           <button
             onClick={() => setViewMode('tracking')}
-            className="px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200"
-            style={viewMode === 'tracking' ? {
-              background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
-              color: 'white',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              transform: 'scale(1.05)'
-            } : {
-              color: '#374151'
-            }}
-            onMouseEnter={(e) => { if (viewMode !== 'tracking') e.currentTarget.style.background = '#F3F4F6'; }}
-            onMouseLeave={(e) => { if (viewMode !== 'tracking') e.currentTarget.style.background = 'transparent'; }}
+            className={`px-6 py-2.5 text-sm font-semibold rounded transition-all ${
+              viewMode === 'tracking'
+                ? 'bg-planner-blue text-white shadow-sm'
+                : 'text-planner-gray-text hover:bg-planner-gray-light'
+            }`}
           >
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,17 +63,11 @@ export function MainLayout() {
           </button>
           <button
             onClick={() => setViewMode('settings')}
-            className="px-6 py-3 text-sm font-semibold rounded-xl transition-all duration-200"
-            style={viewMode === 'settings' ? {
-              background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
-              color: 'white',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              transform: 'scale(1.05)'
-            } : {
-              color: '#374151'
-            }}
-            onMouseEnter={(e) => { if (viewMode !== 'settings') e.currentTarget.style.background = '#F3F4F6'; }}
-            onMouseLeave={(e) => { if (viewMode !== 'settings') e.currentTarget.style.background = 'transparent'; }}
+            className={`px-6 py-2.5 text-sm font-semibold rounded transition-all ${
+              viewMode === 'settings'
+                ? 'bg-planner-blue text-white shadow-sm'
+                : 'text-planner-gray-text hover:bg-planner-gray-light'
+            }`}
           >
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

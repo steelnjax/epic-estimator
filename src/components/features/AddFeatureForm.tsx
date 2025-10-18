@@ -32,19 +32,19 @@ export function AddFeatureForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 border-t pt-4">
+    <form onSubmit={handleSubmit} className="space-y-2 pb-4 border-b border-planner-gray-border">
       <input
         type="text"
         value={name}
         onChange={e => setName(e.target.value)}
         placeholder="Feature name..."
-        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+        className="w-full px-3 py-2 border border-planner-gray-border rounded text-sm focus:outline-none focus:border-planner-blue"
       />
       <div className="flex gap-2">
         <select
           value={size}
           onChange={e => setSize(e.target.value as TShirtSize)}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+          className="flex-1 px-3 py-2 border border-planner-gray-border rounded text-sm focus:outline-none focus:border-planner-blue"
         >
           <option value="S">Small (30pts)</option>
           <option value="M">Medium (60pts)</option>
@@ -53,7 +53,7 @@ export function AddFeatureForm() {
         <select
           value={priority}
           onChange={e => setPriority(e.target.value as Priority)}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-500"
+          className="flex-1 px-3 py-2 border border-planner-gray-border rounded text-sm focus:outline-none focus:border-planner-blue"
         >
           <option value="High">High</option>
           <option value="Medium">Medium</option>
@@ -62,7 +62,7 @@ export function AddFeatureForm() {
       </div>
       <button
         type="submit"
-        className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:outline-2 focus:outline-blue-500 transition-colors"
+        className="w-full px-4 py-2 bg-planner-blue text-white text-sm font-medium rounded hover:bg-planner-blue-hover focus:outline-none focus:ring-2 focus:ring-planner-blue/50 transition-colors"
       >
         Add Feature
       </button>

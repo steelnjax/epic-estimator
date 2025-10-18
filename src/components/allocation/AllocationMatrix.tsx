@@ -7,10 +7,10 @@ export function AllocationMatrix() {
 
   if (!state.selectedEpicId) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 flex items-center justify-center">
-        <div className="text-center text-gray-500">
+      <div className="bg-white rounded shadow-sm border border-planner-gray-border p-8 flex items-center justify-center">
+        <div className="text-center text-planner-gray-text">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
+            className="mx-auto h-12 w-12 text-planner-gray-text-light mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -22,8 +22,8 @@ export function AllocationMatrix() {
               d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
             />
           </svg>
-          <p className="text-lg font-medium">No epic selected</p>
-          <p className="text-sm mt-2">Select an epic to allocate features to sprints</p>
+          <p className="text-lg font-semibold text-gray-800">No epic selected</p>
+          <p className="text-sm mt-2 text-planner-gray-text-light">Select an epic to allocate features to sprints</p>
         </div>
       </div>
     );
@@ -34,10 +34,10 @@ export function AllocationMatrix() {
 
   if (features.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 flex items-center justify-center">
-        <div className="text-center text-gray-500">
+      <div className="bg-white rounded shadow-sm border border-planner-gray-border p-8 flex items-center justify-center">
+        <div className="text-center text-planner-gray-text">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
+            className="mx-auto h-12 w-12 text-planner-gray-text-light mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -49,8 +49,8 @@ export function AllocationMatrix() {
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
           </svg>
-          <p className="text-lg font-medium">No features yet</p>
-          <p className="text-sm mt-2">Add features to {selectedEpic?.name} to start allocating</p>
+          <p className="text-lg font-semibold text-gray-800">No features yet</p>
+          <p className="text-sm mt-2 text-planner-gray-text-light">Add features to {selectedEpic?.name} to start allocating</p>
         </div>
       </div>
     );
@@ -77,53 +77,53 @@ export function AllocationMatrix() {
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 p-8 hover:shadow-2xl transition-shadow">
+    <div className="bg-white rounded shadow-sm border border-planner-gray-border p-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-3 rounded-xl">
+        <div className="bg-planner-blue p-2.5 rounded">
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>
         </div>
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-semibold text-gray-800">
             Sprint Allocation Matrix
           </h2>
-          <p className="text-sm text-gray-600 mt-0.5">{selectedEpic?.name}</p>
+          <p className="text-sm text-planner-gray-text mt-0.5">{selectedEpic?.name}</p>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-gray-200/50">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+      <div className="overflow-x-auto rounded border border-planner-gray-border">
+        <table className="min-w-full divide-y divide-planner-gray-border">
+          <thead className="bg-planner-gray-light">
             <tr>
-              <th className="sticky left-0 z-10 bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-indigo-200">
+              <th className="sticky left-0 z-10 bg-planner-gray-light px-4 py-3 text-left text-xs font-semibold text-planner-gray-text uppercase tracking-wider border-b border-planner-gray-border">
                 Feature
               </th>
-              <th className="px-2 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-indigo-200">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-planner-gray-text uppercase tracking-wider border-b border-planner-gray-border">
                 Size
               </th>
-              <th className="px-2 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-indigo-200">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-planner-gray-text uppercase tracking-wider border-b border-planner-gray-border">
                 Total
               </th>
               {state.sprints.map(sprint => (
                 <th
                   key={sprint.id}
-                  className="px-2 py-4 text-center text-xs font-bold text-gray-700 border-b-2 border-indigo-200"
+                  className="px-2 py-3 text-center text-xs font-semibold text-planner-gray-text border-b border-planner-gray-border"
                 >
                   <div className="flex flex-col items-center">
-                    <div className="font-bold text-indigo-700">Sprint {sprint.number}</div>
-                    <div className="text-xs font-normal text-gray-500 whitespace-nowrap mt-1">
+                    <div className="font-semibold text-planner-blue">Sprint {sprint.number}</div>
+                    <div className="text-xs font-normal text-planner-gray-text-light whitespace-nowrap mt-1">
                       {formatSprintDateRange(sprint.startDate, sprint.endDate)}
                     </div>
                   </div>
                 </th>
               ))}
-              <th className="px-4 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-indigo-200">
+              <th className="px-4 py-3 text-center text-xs font-semibold text-planner-gray-text uppercase tracking-wider border-b border-planner-gray-border">
                 Completion
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
+          <tbody className="bg-white divide-y divide-planner-gray-border">
             {features.map((feature, idx) => {
               const totalAllocated = getFeatureTotal(feature.id);
               const isOverallocated = totalAllocated > feature.points;
@@ -131,25 +131,25 @@ export function AllocationMatrix() {
               const completionSprint = feature.estimatedCompletionSprint;
 
               return (
-                <tr key={feature.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="sticky left-0 z-10 bg-inherit px-4 py-3 text-sm font-medium text-gray-900 border-r border-gray-200">
+                <tr key={feature.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-planner-gray-bg'}>
+                  <td className="sticky left-0 z-10 bg-inherit px-4 py-3 text-sm font-medium text-gray-800 border-r border-planner-gray-border">
                     <div className="max-w-xs truncate" title={feature.name}>
                       {feature.name}
                     </div>
                   </td>
-                  <td className="px-2 py-3 text-center text-sm text-gray-900 border-r border-gray-200">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                  <td className="px-2 py-3 text-center text-sm text-gray-800 border-r border-planner-gray-border">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-planner-blue/10 text-planner-blue">
                       {feature.size}
                     </span>
                   </td>
-                  <td className="px-2 py-3 text-center text-sm border-r border-gray-200">
+                  <td className="px-2 py-3 text-center text-sm border-r border-planner-gray-border">
                     <span
                       className={`font-semibold ${
                         isOverallocated
-                          ? 'text-red-600'
+                          ? 'text-status-red'
                           : isFullyAllocated
-                          ? 'text-green-600'
-                          : 'text-gray-900'
+                          ? 'text-status-green'
+                          : 'text-gray-800'
                       }`}
                     >
                       {totalAllocated}/{feature.points}
@@ -166,11 +166,11 @@ export function AllocationMatrix() {
                   ))}
                   <td className="px-4 py-3 text-center text-sm">
                     {completionSprint ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/10 text-status-green">
                         Sprint {completionSprint}
                       </span>
                     ) : (
-                      <span className="text-gray-400 text-xs">Not allocated</span>
+                      <span className="text-planner-gray-text-light text-xs">Not allocated</span>
                     )}
                   </td>
                 </tr>
@@ -178,8 +178,8 @@ export function AllocationMatrix() {
             })}
           </tbody>
           <tfoot>
-            <tr className="bg-gradient-to-r from-indigo-50 to-purple-50 border-t-2 border-indigo-300">
-              <td className="sticky left-0 z-10 bg-gradient-to-r from-indigo-50 to-purple-50 px-4 py-4 text-sm font-bold text-indigo-900">
+            <tr className="bg-planner-gray-light border-t-2 border-planner-gray-border">
+              <td className="sticky left-0 z-10 bg-planner-gray-light px-4 py-3 text-sm font-semibold text-gray-800">
                 Sprint Total
               </td>
               <td className="px-2 py-3"></td>
@@ -194,7 +194,7 @@ export function AllocationMatrix() {
                     <div className="flex flex-col items-center">
                       <span
                         className={`text-sm font-semibold ${
-                          isOverallocated ? 'text-red-600' : 'text-gray-900'
+                          isOverallocated ? 'text-status-red' : 'text-gray-800'
                         }`}
                       >
                         {total}/{sprint.velocity}
@@ -202,10 +202,10 @@ export function AllocationMatrix() {
                       <span
                         className={`text-xs ${
                           isOverallocated
-                            ? 'text-red-600'
+                            ? 'text-status-red'
                             : utilizationPercent >= 90
-                            ? 'text-orange-600'
-                            : 'text-gray-500'
+                            ? 'text-status-orange'
+                            : 'text-planner-gray-text'
                         }`}
                       >
                         {utilizationPercent}%
@@ -221,58 +221,58 @@ export function AllocationMatrix() {
       </div>
 
       {/* Legend */}
-      <div className="mt-8 flex items-center gap-8 text-sm text-gray-600 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200/50">
+      <div className="mt-6 flex items-center gap-6 text-sm text-planner-gray-text bg-planner-gray-light rounded p-4 border border-planner-gray-border">
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-blue-50 border-2 border-blue-400 rounded-lg shadow-sm"></div>
+          <div className="w-4 h-4 bg-planner-blue/10 border-2 border-planner-blue rounded"></div>
           <span className="font-medium">Allocated</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-orange-50 border-2 border-orange-400 rounded-lg shadow-sm"></div>
+          <div className="w-4 h-4 bg-status-orange/10 border-2 border-status-orange rounded"></div>
           <span className="font-medium">Over-allocated</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-gray-50 border-2 border-gray-200 rounded-lg shadow-sm"></div>
+          <div className="w-4 h-4 bg-white border-2 border-planner-gray-border rounded"></div>
           <span className="font-medium">Empty</span>
         </div>
       </div>
 
       {/* Help text */}
-      <div className="mt-6 p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl border border-indigo-200/50 shadow-inner">
+      <div className="mt-6 p-5 bg-planner-blue/5 rounded border border-planner-blue/20">
         <div className="flex items-start gap-3">
-          <div className="bg-white p-2 rounded-lg shadow-sm">
-            <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white p-2 rounded border border-planner-gray-border">
+            <svg className="w-5 h-5 text-planner-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div>
-            <h3 className="text-sm font-bold text-indigo-900 mb-3">How to use the Allocation Matrix</h3>
-            <ul className="text-sm text-indigo-800 space-y-2">
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">How to use the Allocation Matrix</h3>
+            <ul className="text-sm text-planner-gray-text space-y-2">
               <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-planner-blue mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Click any cell to allocate story points from a feature to a sprint</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-planner-blue mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>The matrix prevents over-allocation of sprint capacity and feature points</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-planner-blue mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Feature totals show allocated/total points for each feature</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-planner-blue mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Sprint totals show allocated/capacity points for each sprint</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-planner-blue mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Completion sprint is calculated automatically when a feature reaches 100%</span>

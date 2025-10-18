@@ -118,24 +118,24 @@ export function AllocationCell({ feature, sprint, currentValue }: AllocationCell
 
   // Determine cell styling
   const getCellClass = () => {
-    const baseClass = 'w-20 px-2 py-1 text-sm text-center border-2 rounded transition-colors';
+    const baseClass = 'w-20 px-2 py-1.5 text-sm text-center border-2 rounded transition-colors';
 
     if (error) {
-      return `${baseClass} border-red-500 bg-red-50`;
+      return `${baseClass} border-status-red bg-status-red/10`;
     }
 
     if (currentValue > 0) {
       if (isFeatureOverallocated || isSprintOverallocated) {
-        return `${baseClass} border-orange-400 bg-orange-50 text-orange-900`;
+        return `${baseClass} border-status-orange bg-status-orange/10 text-status-orange font-medium`;
       }
-      return `${baseClass} border-blue-400 bg-blue-50 text-blue-900`;
+      return `${baseClass} border-planner-blue bg-planner-blue/10 text-planner-blue font-medium`;
     }
 
     if (isEditing) {
-      return `${baseClass} border-blue-500 bg-white`;
+      return `${baseClass} border-planner-blue bg-white`;
     }
 
-    return `${baseClass} border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300 hover:bg-white`;
+    return `${baseClass} border-planner-gray-border bg-white text-planner-gray-text hover:border-planner-blue/50`;
   };
 
   return (

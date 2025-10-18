@@ -1,6 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@theme {
+  /* Microsoft Planner Color Palette */
+  --color-planner-blue: #0078d4;
+  --color-planner-blue-dark: #106ebe;
+  --color-planner-blue-light: #2b88d8;
+  --color-planner-blue-hover: #005a9e;
+  --color-planner-gray-bg: #faf9f8;
+  --color-planner-gray-light: #f3f2f1;
+  --color-planner-gray-border: #edebe9;
+  --color-planner-gray-text: #605e5c;
+  --color-planner-gray-text-light: #8a8886;
+
+  --color-primary-blue: #0078d4;
+  --color-primary-teal: #00b7c3;
+  --color-primary-dark: #005a9e;
+
+  --color-status-green: #107c10;
+  --color-status-orange: #ff8c00;
+  --color-status-red: #d13438;
+  --color-status-gray: #8a8886;
+
+  --color-size-small: #c8e6c9;
+  --color-size-medium: #ffecb3;
+  --color-size-large: #bbdefb;
+}
+
 :root {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
@@ -20,7 +46,6 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #DDD6FE 100%);
 }
 
 #root {
@@ -36,18 +61,18 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f3f2f1;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0078d4;
   border-radius: 10px;
-  border: 2px solid #f1f5f9;
+  border: 2px solid #f3f2f1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+  background: #005a9e;
 }
 
 /* Smooth animations - removed global as it conflicts with Tailwind v4 */

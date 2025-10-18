@@ -1,4 +1,5 @@
-import { Epic } from '../../types';
+import { useState } from 'react';
+import { Epic, Priority } from '../../types';
 import { useAppContext } from '../../context/AppContext';
 
 interface EpicCardProps {
@@ -9,9 +10,13 @@ export function EpicCard({ epic }: EpicCardProps) {
   const { state, dispatch, computeEpicData } = useAppContext();
   const isSelected = state.selectedEpicId === epic.id;
   const epicData = computeEpicData(epic.id);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(epic.name);
 
   const handleSelect = () => {
-    dispatch({ type: 'SELECT_EPIC', payload: { epicId: epic.id } });
+    if (!isEditing) {
+      dispatch({ type: 'SELECT_EPIC', payload: { epicId: epic.id } });
+    }
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -21,34 +26,101 @@ export function EpicCard({ epic }: EpicCardProps) {
     }
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setEditValue(epic.name);
+  };
+
+  const handleSave = () => {
+    const trimmed = editValue.trim();
+    if (trimmed && trimmed !== epic.name) {
+      dispatch({ type: 'UPDATE_EPIC', payload: { id: epic.id, name: trimmed } });
+    } else {
+      setEditValue(epic.name);
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    } else if (e.key === 'Escape') {
+      setEditValue(epic.name);
+      setIsEditing(false);
+    }
+  };
+
   return (
     <div
       onClick={handleSelect}
       className={`
-        p-3 rounded-lg border-2 cursor-pointer transition-all
+        p-3 rounded bg-white cursor-pointer transition-all border-l-4
         ${
           isSelected
-            ? 'border-blue-500 bg-blue-50 shadow-md'
-            : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow'
+            ? 'border-l-planner-blue shadow-md ring-1 ring-planner-blue/20'
+            : 'border-l-planner-gray-border hover:shadow-sm hover:border-l-planner-blue-light'
         }
       `}
+      style={{ boxShadow: isSelected ? '0 1px 3px rgba(0,0,0,0.08)' : '0 1px 2px rgba(0,0,0,0.05)' }}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{epic.name}</h3>
-          <div className="flex items-center gap-3 mt-2 text-xs text-gray-600">
+          {isEditing ? (
+            <input
+              type="text"
+              value={editValue}
+              onChange={e => setEditValue(e.target.value)}
+              onBlur={handleSave}
+              onKeyDown={handleKeyDown}
+              onClick={e => e.stopPropagation()}
+              className="font-semibold text-gray-800 px-2 py-1 border-2 border-planner-blue rounded focus:outline-none focus:border-planner-blue-dark w-full"
+              autoFocus
+            />
+          ) : (
+            <h3
+              className="font-semibold text-gray-800 truncate cursor-text hover:text-planner-blue transition-colors"
+              onClick={handleEdit}
+              title="Click to edit"
+            >
+              {epic.name}
+            </h3>
+          )}
+          {/* Priority dropdown - only show when not editing name */}
+          {!isEditing && (
+            <div className="mt-2">
+              <select
+                value={epic.priority}
+                onChange={e => {
+                  e.stopPropagation();
+                  dispatch({
+                    type: 'UPDATE_EPIC_PRIORITY',
+                    payload: { id: epic.id, priority: e.target.value as Priority }
+                  });
+                }}
+                onClick={e => e.stopPropagation()}
+                className="text-xs px-2 py-1 border border-planner-gray-border rounded bg-white text-planner-gray-text hover:border-planner-blue focus:outline-none focus:border-planner-blue"
+              >
+                <option value="High">High Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+            </div>
+          )}
+          <div className="flex items-center gap-3 mt-2 text-xs text-planner-gray-text">
             <span>{epicData?.featureCount || 0} features</span>
             <span>{epicData?.totalPoints || 0} pts</span>
           </div>
           {epicData && epicData.completionSprint && (
-            <div className="mt-2 text-xs text-gray-600">
+            <div className="mt-2 text-xs text-planner-gray-text-light">
               Est. Sprint {epicData.completionSprint}
             </div>
           )}
         </div>
         <button
           onClick={handleDelete}
-          className="ml-2 text-gray-400 hover:text-red-600 transition-colors"
+          className="ml-2 text-planner-gray-text-light hover:text-status-red transition-colors"
           title="Delete epic"
         >
           <svg

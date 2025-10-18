@@ -5,6 +5,7 @@ import { AppState } from '../types';
 import { DEFAULT_VELOCITY, DEFAULT_NUM_SPRINTS, STORAGE_KEY } from '../constants';
 import { generateSprints } from '../utils/dateUtils';
 import { computeFeatureData as calcFeatureData, computeSprintData as calcSprintData, computeEpicData as calcEpicData } from '../utils/calculations';
+import { migrateAppState } from '../utils/migration';
 
 interface AppProviderProps {
   children: ReactNode;
@@ -41,7 +42,7 @@ function loadState(): AppState | null {
     const parsed = JSON.parse(stored);
 
     // Convert date strings back to Date objects
-    return {
+    const stateWithDates = {
       ...parsed,
       config: {
         ...parsed.config,
@@ -53,6 +54,9 @@ function loadState(): AppState | null {
         endDate: new Date(sprint.endDate),
       })),
     };
+
+    // Apply migrations for backward compatibility
+    return migrateAppState(stateWithDates);
   } catch (error) {
     console.error('Failed to load state from localStorage:', error);
     return null;
