@@ -70,7 +70,7 @@ export function sortFeatures(features: Feature[]): Feature[] {
  * Returns a map of epicId → sorted features
  */
 export function sortFeaturesWithinEpics(
-  epics: Epic[],
+  _epics: Epic[],
   features: Feature[]
 ): Map<string, Feature[]> {
   const featuresByEpic = new Map<string, Feature[]>();
@@ -82,7 +82,7 @@ export function sortFeaturesWithinEpics(
   });
 
   // Sort features within each epic
-  featuresByEpic.forEach((epicFeatures, epicId) => {
+  featuresByEpic.forEach((epicFeatures, _epicId) => {
     epicFeatures.sort((a, b) => {
       // Primary: sort by sortOrder
       if (a.sortOrder !== b.sortOrder) {

@@ -19,7 +19,7 @@ export function AddFeatureForm() {
     dispatch({
       type: 'ADD_FEATURE',
       payload: {
-        epicId: state.selectedEpicId,
+        epicId: state.selectedEpicId!, // Safe because of the guard above
         name: name.trim(),
         size,
         priority,
