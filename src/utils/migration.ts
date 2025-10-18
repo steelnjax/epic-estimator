@@ -66,15 +66,44 @@ export function migrateFeatures(features: any[]): Feature[] {
 }
 
 /**
+ * Clean up allocations that reference non-existent sprints or features
+ */
+export function cleanupAllocations(allocations: any[], sprints: any[], features: any[]): any[] {
+  const validSprintIds = new Set(sprints.map((s: any) => s.id));
+  const validFeatureIds = new Set(features.map((f: any) => f.id));
+
+  return allocations.filter(allocation => {
+    const hasValidSprint = validSprintIds.has(allocation.sprintId);
+    const hasValidFeature = validFeatureIds.has(allocation.featureId);
+
+    if (!hasValidSprint || !hasValidFeature) {
+      console.warn('Removing orphaned allocation:', allocation);
+    }
+
+    return hasValidSprint && hasValidFeature;
+  });
+}
+
+/**
  * Migrate entire app state
  */
 export function migrateAppState(state: any): AppState {
   const defaultVelocity = state.config?.velocity || 100;
 
+  const migratedEpics = migrateEpics(state.epics || []);
+  const migratedFeatures = migrateFeatures(state.features || []);
+  const migratedSprints = migrateSprints(state.sprints || [], defaultVelocity);
+  const cleanedAllocations = cleanupAllocations(
+    state.allocations || [],
+    migratedSprints,
+    migratedFeatures
+  );
+
   return {
     ...state,
-    epics: migrateEpics(state.epics || []),
-    features: migrateFeatures(state.features || []),
-    sprints: migrateSprints(state.sprints || [], defaultVelocity),
+    epics: migratedEpics,
+    features: migratedFeatures,
+    sprints: migratedSprints,
+    allocations: cleanedAllocations,
   };
 }
