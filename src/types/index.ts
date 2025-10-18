@@ -117,6 +117,7 @@ export type Action =
   // Sprint configuration
   | { type: 'UPDATE_CONFIG'; payload: Partial<ProjectConfig> }
   | { type: 'REGENERATE_SPRINTS' } // Recalculate all sprint dates
+  | { type: 'UPDATE_SPRINT_VELOCITY'; payload: { sprintId: string; velocity: number } }
 
   // Tracking actions
   | { type: 'UPDATE_FEATURE_STATUS'; payload: { featureId: string; status: FeatureStatus; notes?: string } }

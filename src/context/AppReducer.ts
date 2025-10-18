@@ -271,6 +271,19 @@ export function appReducer(state: AppState, action: Action): AppState {
       };
     }
 
+    case 'UPDATE_SPRINT_VELOCITY': {
+      const { sprintId, velocity } = action.payload;
+
+      return {
+        ...state,
+        sprints: state.sprints.map(sprint =>
+          sprint.id === sprintId
+            ? { ...sprint, velocity }
+            : sprint
+        ),
+      };
+    }
+
     // Tracking actions
     case 'UPDATE_FEATURE_STATUS': {
       const { featureId, status, notes = '' } = action.payload;

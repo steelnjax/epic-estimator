@@ -1,38 +1,21 @@
 import { useAppContext } from '../../context/AppContext';
 import { AllocationCell } from './AllocationCell';
+import { SprintVelocityEditor } from './SprintVelocityEditor';
 import { formatSprintDateRange } from '../../utils/dateUtils';
 
 export function AllocationMatrix() {
   const { state, getEpicFeatures, getFeatureAllocations } = useAppContext();
 
-  if (!state.selectedEpicId) {
-    return (
-      <div className="bg-white rounded shadow-sm border border-planner-gray-border p-8 flex items-center justify-center">
-        <div className="text-center text-planner-gray-text">
-          <svg
-            className="mx-auto h-12 w-12 text-planner-gray-text-light mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
-            />
-          </svg>
-          <p className="text-lg font-semibold text-gray-800">No epic selected</p>
-          <p className="text-sm mt-2 text-planner-gray-text-light">Select an epic to allocate features to sprints</p>
-        </div>
-      </div>
-    );
-  }
+  // Group features by epic (sorted by epic sortOrder)
+  const epicsWithFeatures = state.epics
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map(epic => ({
+      epic,
+      features: getEpicFeatures(epic.id),
+    }))
+    .filter(group => group.features.length > 0);
 
-  const features = getEpicFeatures(state.selectedEpicId);
-  const selectedEpic = state.epics.find(e => e.id === state.selectedEpicId);
-
-  if (features.length === 0) {
+  if (epicsWithFeatures.length === 0) {
     return (
       <div className="bg-white rounded shadow-sm border border-planner-gray-border p-8 flex items-center justify-center">
         <div className="text-center text-planner-gray-text">
@@ -50,7 +33,7 @@ export function AllocationMatrix() {
             />
           </svg>
           <p className="text-lg font-semibold text-gray-800">No features yet</p>
-          <p className="text-sm mt-2 text-planner-gray-text-light">Add features to {selectedEpic?.name} to start allocating</p>
+          <p className="text-sm mt-2 text-planner-gray-text-light">Add epics and features to start allocating</p>
         </div>
       </div>
     );
@@ -88,7 +71,7 @@ export function AllocationMatrix() {
           <h2 className="text-2xl font-semibold text-gray-800">
             Sprint Allocation Matrix
           </h2>
-          <p className="text-sm text-planner-gray-text mt-0.5">{selectedEpic?.name}</p>
+          <p className="text-sm text-planner-gray-text mt-0.5">All Epics ({epicsWithFeatures.length})</p>
         </div>
       </div>
 
@@ -110,11 +93,12 @@ export function AllocationMatrix() {
                   key={sprint.id}
                   className="px-2 py-3 text-center text-xs font-semibold text-planner-gray-text border-b border-planner-gray-border"
                 >
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center gap-1.5">
                     <div className="font-semibold text-planner-blue">Sprint {sprint.number}</div>
-                    <div className="text-xs font-normal text-planner-gray-text-light whitespace-nowrap mt-1">
+                    <div className="text-xs font-normal text-planner-gray-text-light whitespace-nowrap">
                       {formatSprintDateRange(sprint.startDate, sprint.endDate)}
                     </div>
+                    <SprintVelocityEditor sprint={sprint} />
                   </div>
                 </th>
               ))}
@@ -124,58 +108,91 @@ export function AllocationMatrix() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-planner-gray-border">
-            {features.map((feature, idx) => {
-              const totalAllocated = getFeatureTotal(feature.id);
-              const isOverallocated = totalAllocated > feature.points;
-              const isFullyAllocated = totalAllocated === feature.points;
-              const completionSprint = feature.estimatedCompletionSprint;
-
-              return (
-                <tr key={feature.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-planner-gray-bg'}>
-                  <td className="sticky left-0 z-10 bg-inherit px-4 py-3 text-sm font-medium text-gray-800 border-r border-planner-gray-border">
-                    <div className="max-w-xs truncate" title={feature.name}>
-                      {feature.name}
+            {epicsWithFeatures.map((group) => (
+              <>
+                {/* Epic Header Row */}
+                <tr key={`epic-${group.epic.id}`} className="bg-planner-blue/5 border-t-2 border-planner-blue/20">
+                  <td
+                    colSpan={3 + state.sprints.length + 1}
+                    className="sticky left-0 z-10 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="bg-planner-blue p-1.5 rounded">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <span className="font-semibold text-gray-800 text-base">{group.epic.name}</span>
+                      <span className="text-xs font-medium text-planner-gray-text px-2 py-0.5 bg-white rounded border border-planner-gray-border">
+                        {group.features.length} {group.features.length === 1 ? 'feature' : 'features'}
+                      </span>
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded ${
+                        group.epic.priority === 'High'
+                          ? 'bg-status-red/10 text-status-red'
+                          : group.epic.priority === 'Medium'
+                          ? 'bg-status-orange/10 text-status-orange'
+                          : 'bg-planner-gray-light text-planner-gray-text'
+                      }`}>
+                        {group.epic.priority}
+                      </span>
                     </div>
                   </td>
-                  <td className="px-2 py-3 text-center text-sm text-gray-800 border-r border-planner-gray-border">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-planner-blue/10 text-planner-blue">
-                      {feature.size}
-                    </span>
-                  </td>
-                  <td className="px-2 py-3 text-center text-sm border-r border-planner-gray-border">
-                    <span
-                      className={`font-semibold ${
-                        isOverallocated
-                          ? 'text-status-red'
-                          : isFullyAllocated
-                          ? 'text-status-green'
-                          : 'text-gray-800'
-                      }`}
-                    >
-                      {totalAllocated}/{feature.points}
-                    </span>
-                  </td>
-                  {state.sprints.map(sprint => (
-                    <td key={sprint.id} className="px-2 py-3 text-center">
-                      <AllocationCell
-                        feature={feature}
-                        sprint={sprint}
-                        currentValue={getAllocationValue(feature.id, sprint.id)}
-                      />
-                    </td>
-                  ))}
-                  <td className="px-4 py-3 text-center text-sm">
-                    {completionSprint ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/10 text-status-green">
-                        Sprint {completionSprint}
-                      </span>
-                    ) : (
-                      <span className="text-planner-gray-text-light text-xs">Not allocated</span>
-                    )}
-                  </td>
                 </tr>
-              );
-            })}
+                {/* Feature Rows */}
+                {group.features.map((feature, idx) => {
+                  const totalAllocated = getFeatureTotal(feature.id);
+                  const isOverallocated = totalAllocated > feature.points;
+                  const isFullyAllocated = totalAllocated === feature.points;
+                  const completionSprint = feature.estimatedCompletionSprint;
+
+                  return (
+                    <tr key={feature.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-planner-gray-bg'}>
+                      <td className="sticky left-0 z-10 bg-inherit px-4 py-3 text-sm font-medium text-gray-800 border-r border-planner-gray-border">
+                        <div className="max-w-xs truncate pl-8" title={feature.name}>
+                          {feature.name}
+                        </div>
+                      </td>
+                      <td className="px-2 py-3 text-center text-sm text-gray-800 border-r border-planner-gray-border">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-planner-blue/10 text-planner-blue">
+                          {feature.size}
+                        </span>
+                      </td>
+                      <td className="px-2 py-3 text-center text-sm border-r border-planner-gray-border">
+                        <span
+                          className={`font-semibold ${
+                            isOverallocated
+                              ? 'text-status-red'
+                              : isFullyAllocated
+                              ? 'text-status-green'
+                              : 'text-gray-800'
+                          }`}
+                        >
+                          {totalAllocated}/{feature.points}
+                        </span>
+                      </td>
+                      {state.sprints.map(sprint => (
+                        <td key={sprint.id} className="px-2 py-3 text-center">
+                          <AllocationCell
+                            feature={feature}
+                            sprint={sprint}
+                            currentValue={getAllocationValue(feature.id, sprint.id)}
+                          />
+                        </td>
+                      ))}
+                      <td className="px-4 py-3 text-center text-sm">
+                        {completionSprint ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/10 text-status-green">
+                            Sprint {completionSprint}
+                          </span>
+                        ) : (
+                          <span className="text-planner-gray-text-light text-xs">Not allocated</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </>
+            ))}
           </tbody>
           <tfoot>
             <tr className="bg-planner-gray-light border-t-2 border-planner-gray-border">
